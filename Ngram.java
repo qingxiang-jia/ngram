@@ -1,6 +1,5 @@
 import java.io.*;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,9 +83,7 @@ public class Ngram
     private static void count(byte[] programData, int bytesRead, Map<ByteBuffer, Integer> counts, int n, int s)
     {
         int end = bytesRead - n + 1;
-        System.out.println("end: "+ end);
         for (int windowStart = 0; windowStart < end; windowStart += s) {
-            System.out.println("windowStart: " + windowStart);
             /** sliding window **/
             byte[] window = new byte[n];
             int windowEnd = windowStart + n;
@@ -101,6 +98,10 @@ public class Ngram
         }
     }
 
+    /**
+     * Print out the final counts for this program file.
+     * @param counts
+     */
     public static void printCounts(Map<ByteBuffer, Integer> counts)
     {
         StringBuilder sb = new StringBuilder(); // for efficiency, use the same string builder
@@ -108,6 +109,12 @@ public class Ngram
             System.out.println(byteArrToString(entry.getKey().array(), sb) + ": " + entry.getValue());
     }
 
+    /**
+     * Convert the byte value into hex format for printing.
+     * @param arr
+     * @param sb
+     * @return
+     */
     public static String byteArrToString(byte[] arr, StringBuilder sb)
     {
         sb.setLength(0); // reset
@@ -118,7 +125,7 @@ public class Ngram
 
     public static void main(String[] args)
     {
-        Map<ByteBuffer, Integer> counts = Ngram.count("test2", 3, 1);
-        printCounts(counts);
+        Map<ByteBuffer, Integer> counts = Ngram.count("prog1", 3, 1);
+        NgramAnalyzer.printSortedCounts(counts);
     }
 }
