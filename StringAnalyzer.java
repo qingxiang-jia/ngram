@@ -18,8 +18,8 @@ public class StringAnalyzer
             set2.add(phrase);
         Set<String> intersect = new HashSet<String>(set1);
         intersect.retainAll(set2);
-        System.out.printf("%s and %s have %d strings in common, common rate with" +
-                "respect to %s is %f, with respect to %s, it %f\n\n", fileName1, fileName2, intersect.size(),
+        System.out.printf("%s and %s have %d strings in common, common rate \nwith " +
+                "respect to %s is %f, \nwith respect to %s, is %f\n\n", fileName1, fileName2, intersect.size(),
                 fileName1, intersect.size() / (float) set1.size(), fileName2, intersect.size() / (float) set2.size());
     }
 }
