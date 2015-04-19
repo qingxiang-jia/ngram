@@ -125,7 +125,18 @@ public class Ngram
 
     public static void main(String[] args)
     {
-        Map<ByteBuffer, Integer> counts = Ngram.count("prog1", 3, 1);
-        NgramAnalyzer.printSortedCounts(counts);
+//        Map<ByteBuffer, Integer> counts1 = Ngram.count("prog1", 3, 1);
+//        Map<ByteBuffer, Integer> counts2 = Ngram.count("prog2", 3, 1);
+//        NgramAnalyzer.printSortedCounts(counts);
+//        NgramAnalyzer.intersectRate(counts1, "prog1", counts2, "prog2");
+
+        /** pairwise comparison **/
+        String[] fileNames = new String[]{"prog1", "prog2", "prog3", "prog4", "prog5"};
+        for (int i = 0; i < fileNames.length; i++)
+            for (int j = i + 1; j < fileNames.length; j++) {
+                Map<ByteBuffer, Integer> counts1 = Ngram.count(fileNames[i], 3, 1);
+                Map<ByteBuffer, Integer> counts2 = Ngram.count(fileNames[j], 3, 1);
+                NgramAnalyzer.intersectRate(counts1, fileNames[i], counts2, fileNames[j]);
+            }
     }
 }
