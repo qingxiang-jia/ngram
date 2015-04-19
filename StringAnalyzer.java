@@ -22,13 +22,4 @@ public class StringAnalyzer
                 "respect to %s is %f, with respect to %s, it %f\n\n", fileName1, fileName2, intersect.size(),
                 fileName1, intersect.size() / (float) set1.size(), fileName2, intersect.size() / (float) set2.size());
     }
-
-    public static void main(String[] args)
-    {
-        String[] fileNames = new String[]{"prog1_strings.txt", "prog2_strings.txt", "prog3_strings.txt",
-                "prog4_strings.txt", "prog5_strings.txt"};
-        for (int i = 0; i < fileNames.length; i++)
-            for (int j = i + 1; j < fileNames.length; j++)
-                StringAnalyzer.intersectRate(fileNames[i], fileNames[j]);
-    }
 }

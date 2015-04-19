@@ -35,4 +35,23 @@ public class IOUtil
         }
         return fileInBytes;
     }
+
+    /**
+     * Write a String to file.
+     * @param path Path of the output file.
+     * @param content The String to be written.
+     */
+    public static void stringToFile(String path, String content)
+    {
+        PrintWriter out = null;
+        try {
+            out = new PrintWriter(path);
+            out.println(content);
+        } catch (FileNotFoundException e) {
+            System.out.println("File " + path + " not found.");
+        } finally {
+            if (out != null)
+                out.close();
+        }
+    }
 }

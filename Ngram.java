@@ -15,12 +15,6 @@ public class Ngram
      */
     public static Map<ByteBuffer, Integer> count(String path, int n, int s)
     {
-        /** input check **/
-        if (n < 1 || n > 3 || s > n) {
-            System.out.println("n should be between 1 and 3; s should be between 1 and n.");
-            return null;
-        }
-
         /** set up stream to read from file **/
         File programFile = new File(path);
         FileInputStream fileInputStream  = null;
@@ -102,9 +96,9 @@ public class Ngram
      * Print out the final counts for this program file.
      * @param counts
      */
-    public static void printCounts(Map<ByteBuffer, Integer> counts)
+    public static void printCounts(Map<ByteBuffer, Integer> counts, StringBuilder sb)
     {
-        StringBuilder sb = new StringBuilder(); // for efficiency, use the same string builder
+        sb.setLength(0); // reset
         for (Map.Entry<ByteBuffer, Integer> entry : counts.entrySet())
             System.out.println(byteArrToString(entry.getKey().array(), sb) + ": " + entry.getValue());
     }
@@ -121,22 +115,5 @@ public class Ngram
         for (byte b : arr)
             sb.append(String.format("%02x", b));
         return sb.toString();
-    }
-
-    public static void main(String[] args)
-    {
-//        Map<ByteBuffer, Integer> counts1 = Ngram.count("prog1", 3, 1);
-//        Map<ByteBuffer, Integer> counts2 = Ngram.count("prog2", 3, 1);
-//        NgramAnalyzer.printSortedCounts(counts);
-//        NgramAnalyzer.intersectRate(counts1, "prog1", counts2, "prog2");
-
-        /** pairwise comparison **/
-        String[] fileNames = new String[]{"prog1", "prog2", "prog3", "prog4", "prog5"};
-        for (int i = 0; i < fileNames.length; i++)
-            for (int j = i + 1; j < fileNames.length; j++) {
-                Map<ByteBuffer, Integer> counts1 = Ngram.count(fileNames[i], 3, 1);
-                Map<ByteBuffer, Integer> counts2 = Ngram.count(fileNames[j], 3, 1);
-                NgramAnalyzer.intersectRate(counts1, fileNames[i], counts2, fileNames[j]);
-            }
     }
 }

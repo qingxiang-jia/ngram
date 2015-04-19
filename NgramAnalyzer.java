@@ -1,5 +1,5 @@
 import java.nio.ByteBuffer;
-        import java.util.Arrays;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -11,29 +11,42 @@ import java.util.Set;
 public class NgramAnalyzer
 {
     @SuppressWarnings("unchecked")
-    public static void printSortedCounts(Map<ByteBuffer, Integer> counts)
+    public static void stringfySortedCounts(StringBuilder sBuilder, Map<ByteBuffer, Integer> counts, boolean showPercent)
     {
+        sBuilder.setLength(0); // reset StringBuilder
+
         Map.Entry<ByteBuffer, Integer>[] entries = new Map.Entry[counts.size()];
         counts.entrySet().toArray(entries);
         Arrays.sort(entries, new EntryComparator());
 
         /** count percentage **/
-        float[] percent = new float[counts.size()];
+        float[] percent = null;
+        if (showPercent)
+            percent = new float[counts.size()];
         int total = 0;
         for (int i = 0; i < entries.length; i++) {
-            percent[i] = entries[i].getValue();
+            if (showPercent)
+                percent[i] = entries[i].getValue();
             total += entries[i].getValue();
         }
-        for (int i = 0; i < percent.length; i++) {
-            percent[i] = percent[i] / total;
-        }
+        if (showPercent)
+            for (int i = 0; i < percent.length; i++)
+                percent[i] = percent[i] / total;
 
         /** print out sorted <n-gram, count> pair **/
         StringBuilder sb = new StringBuilder();
-        System.out.printf("%8s   %8s  %8s\n", "gram", "occurrence", "percent");
-        for (int i = 0; i < entries.length; i++) {
-            System.out.printf("%8s   %10d  %8f\n",
-                    Ngram.byteArrToString(entries[i].getKey().array(), sb), entries[i].getValue(), percent[i]);
+        if (showPercent) {
+            sBuilder.append(String.format("%8s   %8s  %8s\n", "n-gram", "occurrence", "percent"));
+            for (int i = 0; i < entries.length; i++) {
+                sBuilder.append(String.format("%8s   %10d  %8f\n",
+                        Ngram.byteArrToString(entries[i].getKey().array(), sb), entries[i].getValue(), percent[i]));
+            }
+        } else {
+            sBuilder.append(String.format("%8s   %8s\n", "n-gram", "occurrence"));
+            for (int i = 0; i < entries.length; i++) {
+                sBuilder.append(String.format("%8s   %10d\n",
+                        Ngram.byteArrToString(entries[i].getKey().array(), sb), entries[i].getValue()));
+            }
         }
     }
 
