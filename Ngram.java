@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * N-gram counter that count the occurrence of each byte in a binary file.
+ * N-gram counter that counts the occurrence of each byte in a binary file.
  */
 public class Ngram
 {
@@ -12,6 +12,10 @@ public class Ngram
 
     /**
      * Read a binary file in buffer, perform n-gram counting until the file is finished.
+     * @param path Path to the file to count.
+     * @param n An integer that is the length of the n-grams
+     * @param s The length of the slide.
+     * @return The Map<n-gram, count> for further calculation.
      */
     public static Map<ByteBuffer, Integer> count(String path, int n, int s)
     {
@@ -75,34 +79,30 @@ public class Ngram
      * program will run properly. Yes, it is true I can rewrite a different version of the rest of methods so that
      * I don't have to convert to HashMap, but it's tedious to implement. Therefore, you will see a conversion
      * code block at the end of this method.
-     * @param programData
-     * @param bytesRead
-     * @param counts
+     * @param programData The array that contains binary content of a program file.
+     * @param bytesRead Since programData may not necessarily fully filled, use this as for loop boundary.
+     * @param counts The Map (Map<n-gram, count>) stores the count.
      */
     private static void countN1(byte[] programData, int bytesRead, Map<ByteBuffer, Integer> counts)
     {
         int[] minus = new int[129], plus = new int[129]; // when treated as int, it's signed
-        for (int i = 0; i < bytesRead; i++) {
-            if (programData[i] >= 0) {
-                plus[ programData[i]]++;
-            } else {
-                minus[-programData[i]]++;
-            }
-        }
+        for (int i = 0; i < bytesRead; i++)
+            if (programData[i] >= 0)
+                plus[ programData[i]]++; // positive bytes
+            else
+                minus[-programData[i]]++; // negative bytes
         /** update counts **/
         for (int i = 0; i < plus.length; i++) {
             ByteBuffer key1 = ByteBuffer.wrap(new byte[]{(byte) i});
-            if (counts.containsKey(key1)) {
+            if (counts.containsKey(key1))
                 counts.put(key1, counts.get(key1) + plus[i]);
-            } else {
+            else
                 counts.put(key1, plus[i]);
-            }
             ByteBuffer key2 = ByteBuffer.wrap(new byte[]{(byte) -i});
-            if (counts.containsKey(key2)) {
+            if (counts.containsKey(key2))
                 counts.put(key2, counts.get(key2) + minus[i]);
-            } else {
+            else
                 counts.put(key2, minus[i]);
-            }
         }
     }
 
@@ -112,8 +112,10 @@ public class Ngram
      * instead of byte[] because the former uses the contents of the bytes as key, not the memory
      * location, thus I can retrieve the key without having to have a reference to the original n-gram.
      * If the remaining bytes does not fill the sliding window fully, discard the last window.
-     * @param programData
-     * @param bytesRead
+     * @param programData The array that contains binary content of a program file.
+     * @param bytesRead Since programData may not necessarily fully filled, use this as for loop boundary.
+     * @param n An integer that is the length of the n-grams
+     * @param s The length of the slide.
      */
     private static void count(byte[] programData, int bytesRead, Map<ByteBuffer, Integer> counts, int n, int s)
     {
@@ -125,7 +127,7 @@ public class Ngram
             for (int j = windowStart; j < windowEnd; j++)
                 window[j - windowStart] = programData[j];
             /** update counts **/
-            ByteBuffer win = ByteBuffer.wrap(window);
+            ByteBuffer win = ByteBuffer.wrap(window); // wrap the n-gram as ByteBuffer, which acts as a key of the Map
             if (counts.containsKey(win))
                 counts.put(win, counts.get(win) + 1);
             else
@@ -135,7 +137,7 @@ public class Ngram
 
     /**
      * Print out the final counts for this program file.
-     * @param counts
+     * @param counts The Map (Map<n-gram, count>) stores the count.
      */
     public static void printCounts(Map<ByteBuffer, Integer> counts, StringBuilder sb)
     {
@@ -146,15 +148,16 @@ public class Ngram
 
     /**
      * Convert the byte value into hex format for printing.
-     * @param arr
-     * @param sb
-     * @return
+     * @param arr The byte array to print.
+     * @param sb StringBuilder that generates the string. Passing it in so that we don't need to
+     *           ask for a new one.
+     * @return The constructed string.
      */
     public static String byteArrToString(byte[] arr, StringBuilder sb)
     {
         sb.setLength(0); // reset
         for (byte b : arr)
-            sb.append(String.format("%02x", b));
+            sb.append(String.format("%02x", b)); // Notice for better looking, I didn't add the 0x part, so 0x2b is 2b.
         return sb.toString();
     }
 }

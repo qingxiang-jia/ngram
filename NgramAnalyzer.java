@@ -10,14 +10,20 @@ import java.util.Set;
  */
 public class NgramAnalyzer
 {
+    /**
+     * Generates a string that lists the n-gram and corresponding counts, with an optional percentage to display.
+     * @param sBuilder StringBuilder that generates string.
+     * @param counts The Map (Map<n-gram, count>) stores the count.
+     * @param showPercent True to display the percentage this n-gram takes in the file.
+     */
     @SuppressWarnings("unchecked")
-    public static void stringfySortedCounts(StringBuilder sBuilder, Map<ByteBuffer, Integer> counts, boolean showPercent)
+    public static void stringifySortedCounts(StringBuilder sBuilder, Map<ByteBuffer, Integer> counts, boolean showPercent)
     {
         sBuilder.setLength(0); // reset StringBuilder
 
         Map.Entry<ByteBuffer, Integer>[] entries = new Map.Entry[counts.size()];
         counts.entrySet().toArray(entries);
-        Arrays.sort(entries, new EntryComparator());
+        Arrays.sort(entries, new EntryComparator()); // sort in descending order
 
         /** count percentage **/
         float[] percent = null;
@@ -37,23 +43,21 @@ public class NgramAnalyzer
         StringBuilder sb = new StringBuilder();
         if (showPercent) {
             sBuilder.append(String.format("%8s   %8s  %8s\n", "n-gram", "occurrence", "percent"));
-            for (int i = 0; i < entries.length; i++) {
+            for (int i = 0; i < entries.length; i++)
                 sBuilder.append(String.format("%8s   %10d  %8f\n",
                         Ngram.byteArrToString(entries[i].getKey().array(), sb), entries[i].getValue(), percent[i]));
-            }
         } else {
             sBuilder.append(String.format("%8s   %8s\n", "n-gram", "occurrence"));
-            for (int i = 0; i < entries.length; i++) {
+            for (int i = 0; i < entries.length; i++)
                 sBuilder.append(String.format("%8s   %10d\n",
                         Ngram.byteArrToString(entries[i].getKey().array(), sb), entries[i].getValue()));
-            }
         }
     }
 
     /**
      * For two n-gram distribution, compute how many grams are in common.
-     * @param counts1
-     * @param counts2
+     * @param counts1 The Map (Map<n-gram, count>) stores the count of file1.
+     * @param counts2 The Map (Map<n-gram, count>) stores the count of file2.
      */
     public static void intersectRate(Map<ByteBuffer, Integer> counts1, String fileName1,
                                      Map<ByteBuffer, Integer> counts2, String fileName2)

@@ -20,11 +20,8 @@ public class IOUtil
         byte[] fileInBytes = new byte[(int) file.length()];
         try {
             stream = new FileInputStream(file);
-            int count = stream.read(fileInBytes);
         } catch (FileNotFoundException e) {
             System.out.println("File " + path + " not found.");
-        } catch (IOException e) {
-            System.out.println("Cannot read " + path + ".");
         } finally {
             try {
                 if (stream != null)

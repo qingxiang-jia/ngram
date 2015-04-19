@@ -6,8 +6,8 @@ import java.util.Map;
  * programs.
  * It requires you have prog1 through prog5 in the same folder with the program
  * Usage: java NgramAnalyticalOutput n s in out
- * n    - an integer that is the length of the n-grams
- * s    - the length of the slide
+ *      n - an integer that is the length of the n-grams
+ *      s - the length of the slide
  */
 public class NgramAnalyticalOutput
 {
@@ -20,7 +20,6 @@ public class NgramAnalyticalOutput
             System.exit(1);
         }
         int n = 0, s = 0;
-        String in = null, out = null;
         try {
             n = Integer.parseInt(args[0]);
         } catch (NumberFormatException e) {

@@ -45,7 +45,7 @@ public class NgramSTDOutput
         /** output n-gram and associated counts to file **/
         Map<ByteBuffer, Integer> counts = Ngram.count(in, n, s);
         StringBuilder sb = new StringBuilder();
-        NgramAnalyzer.stringfySortedCounts(sb, counts, false);
+        NgramAnalyzer.stringifySortedCounts(sb, counts, false);
         IOUtil.stringToFile(out, sb.toString());
     }
 }
