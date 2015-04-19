@@ -24,9 +24,4 @@ public class Test
         fileOutputStream.write(new byte[]{0x0, 0x0, 0x0, 0x3});
         fileOutputStream.close();
     }
-
-    public static void main(String[] args) throws Exception
-    {
-        Test.genBinary2();
-    }
 }

@@ -35,8 +35,10 @@ public class Ngram
             try {
                 bytesRead = inputStream.read(programData);
                 /** count byte distribution **/
-                if (bytesRead > 0)
+                if (bytesRead > 0 && n > 1)
                     count(programData, bytesRead, counts, n, s);
+                if (bytesRead > 0 && n == 1)
+                    countN1(programData, bytesRead, counts);
             } catch (IOException e) {
                 System.out.println("Failed to read file.");
                 try {
@@ -63,6 +65,45 @@ public class Ngram
             System.out.println("Failed to close inputStream.");
         }
         return counts;
+    }
+
+    /**
+     * The point of this method really is just because Dr. Cook said for n = 1 we should handle it separately.
+     * I see that using arrays for n = 1 will be slightly faster than HashMap, but my other methods were written
+     * to accept HashMap. So, putting this method here may actually slows down the program since after using
+     * arrays to store counts, eventually I still have to convert the counts into HashMap so that the rest of the
+     * program will run properly. Yes, it is true I can rewrite a different version of the rest of methods so that
+     * I don't have to convert to HashMap, but it's tedious to implement. Therefore, you will see a conversion
+     * code block at the end of this method.
+     * @param programData
+     * @param bytesRead
+     * @param counts
+     */
+    private static void countN1(byte[] programData, int bytesRead, Map<ByteBuffer, Integer> counts)
+    {
+        int[] minus = new int[129], plus = new int[129]; // when treated as int, it's signed
+        for (int i = 0; i < bytesRead; i++) {
+            if (programData[i] >= 0) {
+                plus[ programData[i]]++;
+            } else {
+                minus[-programData[i]]++;
+            }
+        }
+        /** update counts **/
+        for (int i = 0; i < plus.length; i++) {
+            ByteBuffer key1 = ByteBuffer.wrap(new byte[]{(byte) i});
+            if (counts.containsKey(key1)) {
+                counts.put(key1, counts.get(key1) + plus[i]);
+            } else {
+                counts.put(key1, plus[i]);
+            }
+            ByteBuffer key2 = ByteBuffer.wrap(new byte[]{(byte) -i});
+            if (counts.containsKey(key2)) {
+                counts.put(key2, counts.get(key2) + minus[i]);
+            } else {
+                counts.put(key2, minus[i]);
+            }
+        }
     }
 
     /**
