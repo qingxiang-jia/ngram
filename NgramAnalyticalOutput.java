@@ -5,7 +5,7 @@ import java.util.Map;
  * This class takes exactly 2 inputs and prints the pairwise comparison results of the five sample
  * programs.
  * It requires you have prog1 through prog5 in the same folder with the program
- * Usage: java NgramAnalyticalOutput n s in out
+ * Usage: java NgramAnalyticalOutput n s
  *      n - an integer that is the length of the n-grams
  *      s - the length of the slide
  */
